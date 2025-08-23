@@ -14,9 +14,9 @@
   - 工具函数测试 (test_utils.py)
   - 性能基准测试 (test_performance.py)
 - **文档系统**: 创建完整的项目文档
-  - API使用文档 (API_USAGE.md)
-  - 开发指南 (DEVELOPMENT.md)
-  - 测试文档 (README_TESTING.md)
+  - API使用文档 (docs/API_USAGE.md)
+  - 开发指南 (docs/DEVELOPMENT.md)
+  - 测试文档 (docs/TESTING.md)
 - **CI/CD配置**: GitHub Actions自动化测试和部署流程
 - **日志记录系统**: 完整的API访问日志和错误追踪
 - **缓存机制**: 座位图数据缓存，提升API响应性能
@@ -53,3 +53,10 @@
 
 **兼容性**: 向后兼容，原有爬虫功能保持不变
 **部署**: 支持本地开发和生产环境部署
+## 结构优化与文档重构（2025-08-23 20:43）
+- 将 API_USAGE.md、DEVELOPMENT.md、README_TESTING.md 移动至 docs/ 并修正相互引用
+- 更新 README，保留主要信息并链接 docs 文档
+- 更新 .gitignore，新增 pytest_output.txt 忽略规则
+- 清理根目录重复的 AGENTS.md
+- 清理测试/覆盖率产物目录：reports/、htmlcov/、.pytest_cache/
+- 同步修正 CHANGELOG 中对文档路径的引用

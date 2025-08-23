@@ -1,97 +1,10 @@
-# Coverage.py配置文件
-
 [run]
-# 指定要测量覆盖率的源代码目录
-source = .
-
-# 排除不需要测量覆盖率的文件和目录
-omit = 
-    */test_tools/*
-    */tests/*
-    */venv/*
-    */env/*
-    */.venv/*
-    */site-packages/*
-    */dist-packages/*
-    setup.py
-    conftest.py
-    */migrations/*
-    */static/*
-    */templates/*
+source = src
+omit =
+    tests/*
     */__pycache__/*
-    */.*
-    *.pyc
-    */node_modules/*
-
-# 包含的文件模式
-include = 
-    *.py
-    app.py
-    main.py
-    config.py
-    airlines_config.py
-
-# 并行模式
-parallel = True
-
-# 分支覆盖
 branch = True
 
-# 数据文件位置
-data_file = .coverage
-
 [report]
-# 报告配置
 show_missing = True
-skip_covered = False
 skip_empty = True
-sort = Cover
-
-# 精度
-precision = 2
-
-# 排除行（使用注释标记）
-exclude_lines =
-    # 标准排除
-    pragma: no cover
-    def __repr__
-    if self.debug:
-    if settings.DEBUG
-    raise AssertionError
-    raise NotImplementedError
-    if 0:
-    if __name__ == .__main__.:
-    class .*\bProtocol\):
-    @(abc\.)?abstractmethod
-    
-    # 自定义排除
-    # 调试代码
-    if DEBUG:
-    if debug:
-    
-    # 异常处理
-    except ImportError:
-    except Exception:
-    
-    # 类型检查
-    if TYPE_CHECKING:
-    if typing.TYPE_CHECKING:
-
-# 忽略错误
-ignore_errors = True
-
-[html]
-# HTML报告配置
-directory = htmlcov
-title = AeroLOPA Crawler Coverage Report
-show_contexts = True
-
-[xml]
-# XML报告配置
-output = coverage.xml
-
-[json]
-# JSON报告配置
-output = coverage.json
-show_contexts = True
-pretty_print = True

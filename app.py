@@ -1548,3 +1548,30 @@ if __name__ == '__main__':
         debug=True,
         threaded=True
     )
+"""
+Thin wrapper kept for backward compatibility.
+
+The application has been modularized under `src/aerolopa_crawler/` with a CLI
+entry in `src/main.py`. This file delegates to the new CLI so existing
+workflows like `python app.py` continue to run.
+"""
+
+import os
+import sys
+
+
+# Ensure `src/` is importable when running `python app.py` from project root.
+ROOT = os.path.dirname(os.path.abspath(__file__))
+SRC = os.path.join(ROOT, "src")
+if SRC not in sys.path:
+    sys.path.insert(0, SRC)
+
+
+def main() -> int:
+    from aerolopa_crawler.cli import main as cli_main
+
+    return cli_main()
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

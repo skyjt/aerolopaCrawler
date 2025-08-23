@@ -604,4 +604,4 @@ else:
 
 ---
 
-更多详细信息请参考 [README.md](README.md) 和 [开发文档](DEVELOPMENT.md)。
+更多详细信息请参考 [README.md](../README.md) 和 [开发文档](DEVELOPMENT.md)。

@@ -916,4 +916,4 @@ def monitor_memory():
 
 ---
 
-更多信息请参考 [README.md](README.md) 和 [API 使用说明](API_USAGE.md)。
+更多信息请参考 [README.md](../README.md) 和 [API 使用说明](API_USAGE.md)。

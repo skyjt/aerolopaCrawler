@@ -49,6 +49,17 @@ logs/
 *.csv
 *.log
 
+# Test artifacts
+.pytest_cache/
+htmlcov/
+reports/
+.coverage
+coverage.xml
+pytest_output.txt
+
+# Env files
+.env
+
 # Temporary files
 *.tmp
 *.temp
