@@ -8,10 +8,9 @@ from typing import Dict, Optional
 
 
 class HttpClient:
-    """Minimal, dependency-free HTTP client with retries and timeout.
+    """轻量级 HTTP 客户端，支持重试与超时
 
-    Uses stdlib `urllib.request` to avoid external dependencies. Supports
-    GET text/JSON with basic retry-on-error.
+    使用标准库 `urllib.request`，避免额外依赖；提供基本的文本和 JSON 请求
     """
 
     def __init__(
@@ -24,7 +23,9 @@ class HttpClient:
         self.retries = max(0, retries)
         self.user_agent = user_agent
 
-    def _build_request(self, url: str, headers: Optional[Dict[str, str]] = None) -> urllib.request.Request:
+    def _build_request(
+        self, url: str, headers: Optional[Dict[str, str]] = None
+    ) -> urllib.request.Request:
         hdrs = {"User-Agent": self.user_agent}
         if headers:
             hdrs.update(headers)
@@ -38,14 +39,13 @@ class HttpClient:
                 with urllib.request.urlopen(req, timeout=self.timeout) as resp:
                     charset = resp.headers.get_content_charset() or "utf-8"
                     return resp.read().decode(charset, errors="replace")
-            except (urllib.error.URLError, urllib.error.HTTPError) as exc:
+            except (urllib.error.URLError, urllib.error.HTTPError):
                 if attempt >= self.retries:
                     raise
-                backoff = min(2 ** attempt, 4)
+                backoff = min(2**attempt, 4)
                 time.sleep(backoff)
                 attempt += 1
 
     def get_json(self, url: str, headers: Optional[Dict[str, str]] = None) -> object:
         text = self.get_text(url, headers=headers)
         return json.loads(text)
-

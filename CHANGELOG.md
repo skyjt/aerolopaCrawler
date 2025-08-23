@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## [2025-08-24 00:00] - 添加 Gunicorn 生产部署支持
+
+### 修改内容
+- **引入 Gunicorn**：新增 `gunicorn.conf.py`，在 `requirements.txt` 中加入 Gunicorn 依赖，提供标准 WSGI 配置
+- **优化入口文件**：调整 `app.py`，作为 WSGI 入口供 Gunicorn 使用，保留开发模式下的 Flask 内置服务器
+- **文档更新**：更新 `README.md` 与 `docs/API_USAGE.md`，说明使用 Gunicorn 部署的方法
+
+### 影响范围
+- 运行时依赖
+- 文档与部署方式
+
 ## [2025-08-23 23:12] - 文档重构和依赖完善
 
 ### 修改内容

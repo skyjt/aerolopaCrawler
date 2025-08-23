@@ -15,11 +15,14 @@
 # 安装依赖
 pip install -r requirements.txt
 
-# 启动 API 服务
+# 开发环境启动（Flask 内置服务器）
 python app.py
+
+# 生产环境启动（Gunicorn）
+gunicorn app:app -c gunicorn.conf.py
 ```
 
-服务启动后，访问 `http://localhost:5000` 查看服务信息。
+服务启动后，访问 `http://localhost:8000` 查看服务信息。
 
 ### 2. 基础使用示例
 
@@ -30,7 +33,7 @@ import requests
 import json
 
 # API 基础 URL
-BASE_URL = "http://localhost:5000"
+BASE_URL = "http://localhost:8000"
 
 def check_service_status():
     """检查服务状态"""
@@ -110,7 +113,7 @@ if __name__ == "__main__":
 const axios = require('axios');
 const fs = require('fs');
 
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = 'http://localhost:8000';
 
 // 检查服务状态
 async function checkServiceStatus() {
@@ -227,29 +230,29 @@ main().catch(console.error);
 
 # 1. 检查服务状态
 echo "=== 检查服务状态 ==="
-curl -s http://localhost:5000/health | jq .
+curl -s http://localhost:8000/health | jq .
 
 # 2. 获取航空公司列表
 echo -e "\n=== 获取航空公司列表 ==="
-curl -s http://localhost:5000/api/v1/airlines | jq '.data.airlines[:5]'
+curl -s http://localhost:8000/api/v1/airlines | jq '.data.airlines[:5]'
 
 # 3. 获取座位图数据
 echo -e "\n=== 获取座位图数据 ==="
-curl -s "http://localhost:5000/api/v1/seatmap?airline=CA&aircraft=A320&limit=5" | jq .
+curl -s "http://localhost:8000/api/v1/seatmap?airline=CA&aircraft=A320&limit=5" | jq .
 
 # 4. 下载图片（需要先从座位图数据中获取文件名）
 echo -e "\n=== 下载图片 ==="
-curl -s "http://localhost:5000/api/v1/image/CA/CA_A320_001.jpg?quality=85&width=800" \
+curl -s "http://localhost:8000/api/v1/image/CA/CA_A320_001.jpg?quality=85&width=800" \
      -o "downloaded_image.jpg"
 echo "图片已下载为 downloaded_image.jpg"
 
 # 5. 获取 API 统计信息
 echo -e "\n=== API 统计信息 ==="
-curl -s http://localhost:5000/api/v1/stats | jq '.data.performance'
+curl -s http://localhost:8000/api/v1/stats | jq '.data.performance'
 
 # 6. 获取实时性能指标
 echo -e "\n=== 实时性能指标 ==="
-curl -s http://localhost:5000/api/v1/metrics | jq .
+curl -s http://localhost:8000/api/v1/metrics | jq .
 ```
 
 ## 高级用法
