@@ -10,7 +10,6 @@ import logging
 import os
 import re
 import time
-from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 from urllib.parse import urljoin, urlparse
 
@@ -304,33 +303,28 @@ class AerolopaCrawler:
         image_keywords = ['seat', 'map', 'layout', 'cabin', 'aircraft']
         return any(keyword in url.lower() for keyword in image_keywords)
     
-    def _download_image(self, image_url: str, filename: str) -> Optional[str]:
-        """Download image from URL.
-        
-        Args:
-            image_url: URL of the image to download
-            filename: Local filename to save the image
-            
-        Returns:
-            Local file path if successful, None otherwise
-        """
+    def _download_image(self, image_url: str, airline_iata: str, filename: str) -> Optional[str]:
+        """下载图片并保存到对应航空公司文件夹"""
+
         try:
             response = self.session.get(
-                image_url, 
+                image_url,
                 timeout=self.config.crawler.timeout,
                 stream=True
             )
             response.raise_for_status()
-            
-            file_path = os.path.join(self.config.image.cache_dir, filename)
-            
+
+            airline_dir = os.path.join(self.config.image.cache_dir, airline_iata.upper())
+            os.makedirs(airline_dir, exist_ok=True)
+            file_path = os.path.join(airline_dir, filename)
+
             with open(file_path, 'wb') as f:
                 for chunk in response.iter_content(chunk_size=8192):
                     f.write(chunk)
-            
+
             self.logger.debug(f"Downloaded image: {file_path}")
             return file_path
-            
+
         except Exception as e:
             self.logger.error(f"Failed to download image {image_url}: {e}")
             return None
@@ -405,7 +399,7 @@ class AerolopaCrawler:
             for image_url in image_urls:
                 # Generate filename and download image
                 filename = self._generate_image_filename(iata_code, aircraft_model, image_url)
-                image_path = self._download_image(image_url, filename)
+                image_path = self._download_image(image_url, iata_code, filename)
                 
                 # Prepare data for CSV
                 data = {

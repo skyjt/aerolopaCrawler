@@ -50,7 +50,7 @@ class LoggingConfig:
 @dataclass
 class ImageConfig:
     """Configuration for image processing."""
-    cache_dir: str = "images"
+    cache_dir: str = "data"  # 图片缓存目录，默认使用 data 目录
     max_size: tuple[int, int] = (1920, 1080)
     quality: int = 85
     formats: List[str] = field(default_factory=lambda: ["JPEG", "PNG", "WEBP"])
@@ -187,7 +187,7 @@ def load_config(config_path: Optional[str] = None) -> Config:
     
     # Image configuration
     image_config = ImageConfig(
-        cache_dir=os.getenv("AEROLOPA_IMAGE_CACHE_DIR", "images"),
+        cache_dir=os.getenv("AEROLOPA_IMAGE_CACHE_DIR", "data"),
         quality=_getenv_int("AEROLOPA_IMAGE_QUALITY", 85)
     )
     

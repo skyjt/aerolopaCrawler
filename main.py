@@ -6,7 +6,6 @@ For more advanced options, use the CLI module directly.
 """
 
 import sys
-import argparse
 from pathlib import Path
 
 # Add src to path for development
@@ -14,7 +13,7 @@ src_path = Path(__file__).parent / "src"
 if src_path.exists():
     sys.path.insert(0, str(src_path))
 
-from aerolopa_crawler.cli import main as cli_main
+from aerolopa_crawler.cli import main as cli_main  # noqa: E402
 
 
 def main():
