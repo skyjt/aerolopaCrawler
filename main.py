@@ -406,6 +406,69 @@ class AerolopaCrawler:
         logger.info(f"航司 {airline_code.upper()} 完成，下载了 {downloaded_count} 张座位图")
         return downloaded_count
     
+    def crawl_airline_seatmaps(self, airline_code, aircraft_model=None):
+        """爬取指定航司和机型的座位图（API兼容方法）
+        
+        Args:
+            airline_code (str): 航司IATA代码
+            aircraft_model (str, optional): 机型名称，如果为None则爬取该航司所有机型
+            
+        Returns:
+            list: 包含座位图信息的列表
+        """
+        logger.info(f"开始爬取航司座位图: {airline_code.upper()}")
+        
+        # 解析航司页面，获取机型详细页面链接
+        aircraft_links = self.parse_airline_page(airline_code)
+        
+        if not aircraft_links:
+            logger.warning(f"航司 {airline_code} 没有找到机型页面")
+            return []
+        
+        # 如果指定了机型，过滤结果
+        if aircraft_model:
+            aircraft_model_normalized = aircraft_model.upper().replace(' ', '').replace('-', '')
+            filtered_links = []
+            for link in aircraft_links:
+                link_model = link['aircraft_type'].upper().replace(' ', '').replace('-', '')
+                if aircraft_model_normalized in link_model or link_model in aircraft_model_normalized:
+                    filtered_links.append(link)
+            aircraft_links = filtered_links
+        
+        results = []
+        
+        # 处理每个机型
+        for link_info in aircraft_links:
+            try:
+                logger.info(f"正在处理机型: {link_info['aircraft_type']}")
+                
+                # 解析机型详细页面
+                seat_map = self.parse_aircraft_detail_page(
+                    link_info['detail_url'], 
+                    link_info['aircraft_type']
+                )
+                
+                if seat_map:
+                    results.append({
+                        'airline_code': airline_code.upper(),
+                        'aircraft_type': seat_map['aircraft_type'],
+                        'image_url': seat_map['url'],
+                        'filename': seat_map['filename'],
+                        'width': seat_map.get('width'),
+                        'height': seat_map.get('height'),
+                        'detail_url': link_info['detail_url']
+                    })
+                
+                # 添加延迟
+                time.sleep(0.5)
+                    
+            except Exception as e:
+                logger.error(f"处理机型失败: {link_info}, 错误: {e}")
+                continue
+        
+        logger.info(f"航司 {airline_code.upper()} 找到 {len(results)} 个座位图")
+        return results
+    
     def crawl_all_airlines(self):
         """爬取所有航司的机型图片"""
         logger.info("开始爬取AeroLOPA网站")
