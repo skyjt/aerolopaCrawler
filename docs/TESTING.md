@@ -44,7 +44,7 @@ tests/
 ```
 ├── pytest.ini              # pytest 配置
 ├── .coveragerc             # 覆盖率配置
-├── run_all_tests.py        # 主测试运行脚本
+
 └── .github/workflows/tests.yml  # CI/CD 配置
 ```
 
@@ -60,10 +60,7 @@ pip install -r requirements.txt
 ### 2. 运行所有测试
 
 ```bash
-# 使用主测试脚本
-python run_all_tests.py
-
-# 或使用 pytest 直接运行
+# 使用 pytest 运行测试
 pytest tests/
 ```
 
@@ -81,9 +78,6 @@ pytest tests/
 
 ```bash
 # 运行单元测试
-python run_all_tests.py --unit
-
-# 或使用 pytest 标记
 pytest tests/ -m unit
 ```
 
@@ -102,7 +96,7 @@ pytest tests/ -m unit
 python app.py
 
 # 在另一个终端运行集成测试
-python run_all_tests.py --integration
+pytest tests/ -m integration
 ```
 
 **覆盖范围:**
@@ -132,7 +126,7 @@ pytest tests/test_api.py -v
 
 ```bash
 # 运行性能测试
-python run_all_tests.py --performance
+pytest tests/ -m performance
 
 # 或直接运行性能测试脚本
 python tests/test_performance.py
@@ -161,25 +155,22 @@ pytest tests/test_crawler_unit.py -v
 
 ## 🏃‍♂️ 运行测试
 
-### 使用主测试脚本
+### 使用 pytest 运行测试
 
 ```bash
 # 运行所有测试
-python run_all_tests.py
+pytest tests/
 
 # 运行特定类型的测试
-python run_all_tests.py --unit           # 单元测试
-python run_all_tests.py --integration    # 集成测试
-python run_all_tests.py --performance    # 性能测试
+pytest tests/ -m unit           # 单元测试
+pytest tests/ -m integration    # 集成测试
+pytest tests/ -m performance    # 性能测试
 
 # 生成覆盖率报告
-python run_all_tests.py --coverage
+pytest tests/ --cov=. --cov-report=html
 
 # 运行冒烟测试（快速验证）
-python run_all_tests.py --smoke
-
-# 清理测试文件
-python run_all_tests.py --clean
+pytest tests/ -m smoke
 ```
 
 ### 使用 pytest 直接运行
@@ -276,7 +267,7 @@ TEST_DATA = {
 pytest tests/ --cov=. --cov-report=html
 
 # 或使用主脚本
-python run_all_tests.py --coverage
+pytest tests/ --cov=. --cov-report=html
 ```
 
 ### 查看覆盖率报告
@@ -337,7 +328,7 @@ export FLASK_ENV=testing
 export PYTHONPATH=.
 
 # 运行完整测试套件
-python run_all_tests.py
+pytest tests/ --cov=. --cov-report=html
 ```
 
 ## 💡 最佳实践
@@ -435,7 +426,8 @@ kill -9 <PID>
 ls -la tests/
 
 # 修改权限
-chmod +x run_all_tests.py
+# 确保测试文件有执行权限
+chmod +x tests/*.py
 ```
 
 #### 5. 覆盖率报告生成失败

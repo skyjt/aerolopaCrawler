@@ -9,7 +9,7 @@
   - `main.py` — 模块入口：`python -m src.main`
 - `app.py` — 可选：Flask API 服务（提供座位图查询接口）
 - `tests/` — 单元测试与集成测试
-- `scripts/` — 开发脚本（如 `scripts/run_checks.ps1`）
+
 - `configs/` — 运行配置与 `.env.example`
 - `data/` — 缓存输出/样例数据（已被git忽略）
 - `docs/` — 文档目录（API、开发、测试等）
