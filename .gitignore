@@ -54,3 +54,6 @@ logs/
 *.temp
 *.bak
 *.backup
+
+# Test files (not committed to version control)
+test_tools/

@@ -28,3 +28,15 @@ psutil>=5.9.0
 # 可选：高级爬虫功能
 # selenium>=4.15.0
 # webdriver-manager>=4.0.0
+
+# 测试相关依赖
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.0
+pytest-html>=3.2.0
+pytest-xdist>=3.3.0
+coverage>=7.3.0
+mock>=5.1.0
+factory-boy>=3.3.0
+responses>=0.23.0
+httpretty>=1.1.4
