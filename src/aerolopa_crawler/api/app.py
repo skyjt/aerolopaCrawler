@@ -225,13 +225,21 @@ def _register_error_handlers(app: Flask) -> None:
 def _configure_logging(app: Flask, config: Config) -> None:
     """配置日志"""
     if not app.debug:
+        # 确保日志目录存在
+        logs_dir = config.logging.log_dir
+        if not os.path.exists(logs_dir):
+            os.makedirs(logs_dir, exist_ok=True)
+        
+        # 设置日志文件路径
+        log_file = config.logging.file_path or os.path.join(logs_dir, 'aerolopa_api.log')
+        
         # 生产环境日志配置
         logging.basicConfig(
             level=getattr(logging, config.logging.level.upper()),
             format=config.logging.format,
             handlers=[
                 logging.StreamHandler(),
-                logging.FileHandler('aerolopa_api.log')
+                logging.FileHandler(log_file)
             ]
         )
     
@@ -248,7 +256,8 @@ def _ensure_directories(config: Config) -> None:
     """确保必要的目录存在"""
     directories = [
         config.image.cache_dir,
-        config.crawler.output_dir
+        config.crawler.output_dir,
+        config.logging.log_dir
     ]
     
     for directory in directories:

@@ -42,6 +42,7 @@ class LoggingConfig:
     level: str = "INFO"
     format: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     file_path: Optional[str] = None
+    log_dir: str = "logs"
     max_bytes: int = 10 * 1024 * 1024  # 10MB
     backup_count: int = 5
     
@@ -142,6 +143,7 @@ def load_config(config_path: Optional[str] = None) -> Config:
     - AEROLOPA_API_DEBUG: Enable debug mode
     - AEROLOPA_LOG_LEVEL: Logging level
     - AEROLOPA_LOG_FILE: Log file path
+    - AEROLOPA_LOG_DIR: Log directory path
     """
     _maybe_load_dotenv()
     
@@ -178,6 +180,7 @@ def load_config(config_path: Optional[str] = None) -> Config:
             "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
         ),
         file_path=os.getenv("AEROLOPA_LOG_FILE"),
+        log_dir=os.getenv("AEROLOPA_LOG_DIR", "logs"),
         max_bytes=_getenv_int("AEROLOPA_LOG_MAX_BYTES", 10 * 1024 * 1024),
         backup_count=_getenv_int("AEROLOPA_LOG_BACKUP_COUNT", 5)
     )
