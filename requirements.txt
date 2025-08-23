@@ -1,26 +1,32 @@
+######################################################################
 # AeroLOPA 航空座位图爬虫 - 运行时依赖
-# Core web framework
+######################################################################
+
+# 核心 Web 框架
 Flask>=2.3.0
 flask-cors>=4.0.0
 flask-caching>=2.1.0
 
-# HTTP requests and web scraping
+# WSGI 服务器
+gunicorn>=21.2.0
+
+# HTTP 请求与网页解析
 requests>=2.31.0
 beautifulsoup4>=4.12.0
 lxml>=4.9.0
 
-# Image processing
+# 图像处理
 Pillow>=10.0.0
 
-# System monitoring and utilities
+# 系统监控与实用工具
 psutil>=5.9.0
 tqdm>=4.65.0
 retrying>=1.3.4
 
-# Configuration management
+# 配置管理
 python-dotenv>=1.0.0
 
-# Data processing (optional)
+# 数据处理（可选）
 pandas>=2.0.0
 
-# Development and testing dependencies are in requirements-dev.txt
+# 开发与测试依赖请查看 requirements-dev.txt

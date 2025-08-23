@@ -3,15 +3,11 @@ from __future__ import annotations
 import re
 from typing import Any, Dict
 
-from . import Parser
-
 
 class AerolopaParser:
-    """Example HTML parser for Aerolopa-like pages.
+    """示例 HTML 解析器
 
-    Keeps dependencies minimal. Extracts a page title if present and returns
-    a basic record including URL and content length. Replace with domain-specific
-    parsing as needed.
+    依赖最小化：提取页面标题，并返回包含 URL 与内容长度的基础记录
     """
 
     _TITLE_RE = re.compile(r"<title>(.*?)</title>", re.IGNORECASE | re.DOTALL)
@@ -25,4 +21,3 @@ class AerolopaParser:
             "content_length": len(html),
             "_source": "aerolopa",
         }
-

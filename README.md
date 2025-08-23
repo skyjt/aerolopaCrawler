@@ -99,11 +99,14 @@ python main.py --list-airlines
 ### API 服务模式
 
 ```bash
-# 启动 API 服务
+# 开发环境启动（Flask 内置服务器）
 python app.py
 
+# 生产环境启动（Gunicorn）
+gunicorn app:app -c gunicorn.conf.py
+
 # 访问 API 文档
-# http://localhost:5000/api/docs
+# http://localhost:8000/api/docs
 ```
 
 ### 开发与测试

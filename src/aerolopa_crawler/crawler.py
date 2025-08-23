@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Iterable, List, Optional
+from typing import Iterable, Optional
 
 from .http import HttpClient
 from .normalizers import normalize_record
@@ -11,7 +11,7 @@ from .throttle import Throttle
 
 
 class Crawler:
-    """Orchestrates fetching, parsing, normalization, and storage."""
+    """协调抓取、解析、规范化与存储的流程"""
 
     def __init__(
         self,
