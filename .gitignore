@@ -67,4 +67,4 @@ pytest_output.txt
 *.backup
 
 # Test files (not committed to version control)
-test_tools/
+# tests/ directory is committed to version control

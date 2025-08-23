@@ -174,7 +174,25 @@ def get_seatmap():
         force_refresh = request.args.get('force_refresh', 'false').lower() == 'true'
     
     # 验证参数
-    validate_request_params(airline, aircraft, format_type, force_refresh)
+    if not airline:
+        raise APIError("缺少航空公司参数", 400, "MISSING_AIRLINE")
+    if not aircraft:
+        raise APIError("缺少机型参数", 400, "MISSING_AIRCRAFT")
+    
+    # 验证IATA代码和机型
+    validate_iata_code_with_message(airline)
+    validate_aircraft_model_with_message(aircraft)
+    
+    # 验证航空公司支持
+    from ..airlines import get_supported_iata_codes
+    supported_codes = get_supported_iata_codes()
+    if airline not in supported_codes:
+        raise APIError(
+            f"不支持的航空公司: {airline}", 
+            400, 
+            "AIRLINE_NOT_SUPPORTED",
+            {'supported_airlines': supported_codes}
+        )
     
     config = Config()
     

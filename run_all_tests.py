@@ -41,7 +41,7 @@ class TestRunner:
     
     def __init__(self):
         self.project_root = project_root
-        self.test_dir = self.project_root / 'test_tools'
+        self.test_dir = self.project_root / 'tests'
         self.reports_dir = self.project_root / 'reports'
         self.coverage_dir = self.project_root / 'htmlcov'
         
@@ -84,7 +84,7 @@ class TestRunner:
         print("运行单元测试")
         print("="*50)
         
-        cmd = ['python', '-m', 'pytest', 'test_tools/', '-m', 'unit']
+        cmd = ['python', '-m', 'pytest', 'tests/', '-m', 'unit']
         
         if coverage:
             cmd.extend(['--cov=.', '--cov-report=html', '--cov-report=term'])
@@ -112,7 +112,7 @@ class TestRunner:
                 print("❌ 无法启动API服务器，跳过集成测试")
                 return False
         
-        cmd = ['python', '-m', 'pytest', 'test_tools/', '-m', 'integration']
+        cmd = ['python', '-m', 'pytest', 'tests/', '-m', 'integration']
         
         if verbose:
             cmd.append('-v')
@@ -137,7 +137,7 @@ class TestRunner:
                 print("❌ 无法启动API服务器，跳过性能测试")
                 return False
         
-        cmd = ['python', '-m', 'pytest', 'test_tools/', '-m', 'performance']
+        cmd = ['python', '-m', 'pytest', 'tests/', '-m', 'performance']
         
         if verbose:
             cmd.append('-v')
@@ -158,7 +158,7 @@ class TestRunner:
         
         start_time = time.time()
         
-        cmd = ['pytest', 'test_tools/']
+        cmd = ['pytest', 'tests/']
         
         if coverage:
             cmd.extend([
@@ -197,7 +197,7 @@ class TestRunner:
         print("="*50)
         
         cmd = [
-            'pytest', 'test_tools/',
+            'pytest', 'tests/',
             '-m', 'smoke',
             '-v',
             '--tb=line',
@@ -214,7 +214,7 @@ class TestRunner:
         
         # 运行覆盖率测试
         cmd = [
-            'pytest', 'test_tools/',
+            'pytest', 'tests/',
             '--cov=.',
             '--cov-report=html:htmlcov',
             '--cov-report=term-missing',

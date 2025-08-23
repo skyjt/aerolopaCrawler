@@ -28,15 +28,15 @@
 ## 📁 测试结构
 
 ```
-test_tools/
+tests/
 ├── __init__.py              # 测试包初始化
 ├── conftest.py              # pytest 配置和 fixtures
-├── test_config.py           # 测试配置和数据
 ├── test_api.py              # API 接口测试
-├── test_crawler.py          # 爬虫功能测试
-├── test_utils.py            # 工具函数测试
-├── test_performance.py      # 性能测试
-└── run_tests.py             # 测试运行器
+├── test_crawler_unit.py     # 爬虫单元测试
+├── test_cli_smoke.py        # CLI 冒烟测试
+├── test_normalizers.py      # 数据标准化测试
+├── test_throttle.py         # 限流测试
+└── test_performance.py      # 性能测试
 ```
 
 ### 配置文件
@@ -64,7 +64,7 @@ pip install -r requirements.txt
 python run_all_tests.py
 
 # 或使用 pytest 直接运行
-pytest test_tools/
+pytest tests/
 ```
 
 ### 3. 查看测试报告
@@ -84,7 +84,7 @@ pytest test_tools/
 python run_all_tests.py --unit
 
 # 或使用 pytest 标记
-pytest test_tools/ -m unit
+pytest tests/ -m unit
 ```
 
 **覆盖范围:**
@@ -116,7 +116,7 @@ python run_all_tests.py --integration
 
 ```bash
 # 运行 API 测试
-pytest test_tools/test_api.py -v
+pytest tests/test_api.py -v
 ```
 
 **测试端点:**
@@ -135,7 +135,7 @@ pytest test_tools/test_api.py -v
 python run_all_tests.py --performance
 
 # 或直接运行性能测试脚本
-python test_tools/test_performance.py
+python tests/test_performance.py
 ```
 
 **测试指标:**
@@ -150,7 +150,7 @@ python test_tools/test_performance.py
 
 ```bash
 # 运行爬虫测试
-pytest test_tools/test_crawler.py -v
+pytest tests/test_crawler_unit.py -v
 ```
 
 **覆盖范围:**
@@ -186,25 +186,25 @@ python run_all_tests.py --clean
 
 ```bash
 # 运行所有测试
-pytest test_tools/
+pytest tests/
 
 # 运行特定文件
-pytest test_tools/test_api.py
+pytest tests/test_api.py
 
 # 运行特定测试函数
-pytest test_tools/test_api.py::TestAPIEndpoints::test_health_check
+pytest tests/test_api.py::TestAPIEndpoints::test_health_check
 
 # 使用标记运行测试
-pytest test_tools/ -m "unit and not slow"
+pytest tests/ -m "unit and not slow"
 
 # 并行运行测试
-pytest test_tools/ -n auto
+pytest tests/ -n auto
 
 # 详细输出
-pytest test_tools/ -v
+pytest tests/ -v
 
 # 显示最慢的10个测试
-pytest test_tools/ --durations=10
+pytest tests/ --durations=10
 ```
 
 ### 测试标记 (Markers)
@@ -221,13 +221,13 @@ pytest test_tools/ --durations=10
 
 ```bash
 # 运行快速测试（排除慢测试）
-pytest test_tools/ -m "not slow"
+pytest tests/ -m "not slow"
 
 # 运行 API 相关测试
-pytest test_tools/ -m api
+pytest tests/ -m api
 
 # 组合标记
-pytest test_tools/ -m "unit or integration"
+pytest tests/ -m "unit or integration"
 ```
 
 ## ⚙️ 测试配置
@@ -238,7 +238,7 @@ pytest test_tools/ -m "unit or integration"
 
 ```ini
 [tool:pytest]
-testpaths = test_tools
+testpaths = tests
 addopts = -v --tb=short --strict-markers
 markers =
     unit: 单元测试
@@ -273,7 +273,7 @@ TEST_DATA = {
 
 ```bash
 # 运行测试并生成覆盖率报告
-pytest test_tools/ --cov=. --cov-report=html
+pytest tests/ --cov=. --cov-report=html
 
 # 或使用主脚本
 python run_all_tests.py --coverage
@@ -298,7 +298,7 @@ python run_all_tests.py --coverage
 ```ini
 [run]
 omit = 
-    */test_tools/*
+    */tests/*
     */venv/*
     setup.py
 ```
@@ -432,10 +432,10 @@ kill -9 <PID>
 **解决**:
 ```bash
 # 检查文件权限
-ls -la test_tools/
+ls -la tests/
 
 # 修改权限
-chmod +x test_tools/run_tests.py
+chmod +x run_all_tests.py
 ```
 
 #### 5. 覆盖率报告生成失败
@@ -448,7 +448,7 @@ chmod +x test_tools/run_tests.py
 rm -f .coverage*
 
 # 重新运行测试
-pytest test_tools/ --cov=.
+pytest tests/ --cov=.
 ```
 
 ### 调试技巧
@@ -466,12 +466,12 @@ pytest test_tools/ --cov=.
 
 3. **运行单个测试**:
    ```bash
-   pytest test_tools/test_api.py::test_specific_function -v -s
+   pytest tests/test_api.py::test_specific_function -v -s
    ```
 
 4. **查看详细错误信息**:
    ```bash
-   pytest test_tools/ --tb=long
+   pytest tests/ --tb=long
    ```
 
 ### 获取帮助

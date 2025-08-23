@@ -63,7 +63,7 @@ aerolopaCrawler/
 ├── logs/                    # 日志目录
 │   ├── app.log             # 应用日志
 │   └── error.log           # 错误日志
-├── test_tools/              # 测试工具
+├── tests/                   # 测试目录
 │   ├── test_api.py         # API 测试
 │   ├── test_crawler.py     # 爬虫测试
 │   └── test_utils.py       # 工具测试
@@ -346,7 +346,7 @@ pip install pytest black flake8 mypy
 mkdir -p data/airlines data/seatmaps
 mkdir -p cache/images cache/flask
 mkdir -p logs
-mkdir -p test_tools
+mkdir -p tests
 
 # 设置环境变量（可选）
 export FLASK_ENV=development
@@ -467,7 +467,7 @@ except PermissionError:
 #### 1. 测试结构
 
 ```python
-# test_tools/test_api.py
+# tests/test_api.py
 import pytest
 import requests
 from unittest.mock import patch, MagicMock
@@ -517,19 +517,19 @@ class TestAPI:
 
 ```bash
 # 运行所有测试
-pytest test_tools/
+pytest tests/
 
 # 运行特定测试文件
-pytest test_tools/test_api.py
+pytest tests/test_api.py
 
 # 运行特定测试方法
-pytest test_tools/test_api.py::TestAPI::test_health_check
+pytest tests/test_api.py::TestAPI::test_health_check
 
 # 生成覆盖率报告
-pytest --cov=app test_tools/
+pytest --cov=app tests/
 
 # 详细输出
-pytest -v test_tools/
+pytest -v tests/
 ```
 
 ### 性能优化
@@ -891,7 +891,7 @@ def monitor_memory():
 1. **Fork 项目**
 2. **创建特性分支**: `git checkout -b feature/amazing-feature`
 3. **编写代码和测试**
-4. **运行测试**: `pytest test_tools/`
+4. **运行测试**: `pytest tests/`
 5. **代码格式化**: `black app.py`
 6. **代码检查**: `flake8 app.py`
 7. **提交更改**: `git commit -m 'Add amazing feature'`
