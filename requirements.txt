@@ -1,3 +1,26 @@
-# Minimal runtime requirements for CLI crawler
-# Optional: load .env without breaking when missing
+# AeroLOPA 航空座位图爬虫 - 运行时依赖
+# Core web framework
+Flask>=2.3.0
+flask-cors>=4.0.0
+flask-caching>=2.1.0
+
+# HTTP requests and web scraping
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+
+# Image processing
+Pillow>=10.0.0
+
+# System monitoring and utilities
+psutil>=5.9.0
+tqdm>=4.65.0
+retrying>=1.3.4
+
+# Configuration management
 python-dotenv>=1.0.0
+
+# Data processing (optional)
+pandas>=2.0.0
+
+# Development and testing dependencies are in requirements-dev.txt

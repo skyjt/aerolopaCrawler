@@ -22,13 +22,50 @@
 - `data/` — 缓存输出/样例数据（已被git忽略）
 - `docs/` — 文档目录（API、开发、测试等）
 
+## 安装
+
+### 环境要求
+- Python 3.8+
+- 操作系统：Windows、macOS、Linux
+
+### 1. 克隆项目
+```bash
+git clone https://github.com/your-username/aerolopaCrawler.git
+cd aerolopaCrawler
+```
+
+### 2. 创建虚拟环境
+
+**Windows (PowerShell):**
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+**Windows (Command Prompt):**
+```cmd
+python -m venv .venv
+.venv\Scripts\activate.bat
+```
+
+**macOS/Linux:**
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### 3. 安装依赖
+```bash
+# 基础运行环境
+pip install -r requirements.txt
+
+# 开发环境（可选）
+pip install -r requirements-dev.txt
+```
+
 ## 快速开始
 
-1) 创建虚拟环境并安装依赖
-- PowerShell: `python -m venv .venv; .\\.venv\\Scripts\\Activate.ps1`
-- 安装: `pip install -r requirements.txt`（开发环境额外安装 `pip install -r requirements-dev.txt`）
-
-2) 批量抓取模式
+### 批量抓取模式
 ```bash
 # 抓取指定航空公司的座位图
 python main.py --airline AA
@@ -40,68 +77,33 @@ python main.py --all-airlines
 python main.py --list-airlines
 ```
 
-3) 运行API服务（可选）
-- `python app.py` 启动本地API服务，默认端口 5000
-
-4) 质量保障
-- 规范: `ruff check .` / `black --check .`
-- 类型: `mypy src`
-- 测试: `pytest -q`（覆盖率针对 `src/`）
-
-## 批量抓取功能
-
-### 命令行选项
-
-| 选项 | 描述 | 示例 |
-|------|------|------|
-| `--airline <code>` | 抓取指定航空公司的座位图 | `--airline AA` |
-| `--all-airlines` | 抓取所有支持的航空公司 | `--all-airlines` |
-| `--list-airlines` | 列出所有支持的航空公司代码 | `--list-airlines` |
-
-### 使用示例
-
-**1. 抓取单个航空公司**
-```bash
-python main.py --airline AA
-```
-输出：下载American Airlines的所有座位图到 `data/seatmaps/` 目录，生成 `data/seatmaps_AA.csv` 数据文件。
-
-**2. 抓取所有航空公司**
-```bash
-python main.py --all-airlines
-```
-输出：依次抓取所有支持的航空公司座位图，每个航空公司生成独立的CSV文件。
-
-**3. 查看支持的航空公司**
-```bash
-python main.py --list-airlines
-```
-输出：显示所有支持的航空公司代码列表，如：AA, DL, UA, WN等。
-
-### 输出结构
-
-```
-data/
-├── seatmaps/           # 座位图图片目录
-│   ├── AA/            # 按航空公司分类
-│   ├── DL/
-│   └── ...
-├── seatmaps_AA.csv    # American Airlines数据
-├── seatmaps_DL.csv    # Delta Airlines数据
-└── ...
-```
-
-## API服务模式
-
-启动API服务后，可通过HTTP接口查询座位图数据：
-
+### API服务模式
 ```bash
 # 启动API服务
 python app.py
 
-# 查询示例
-curl http://localhost:5000/api/seatmaps?airline=AA
+# 访问API文档
+# http://localhost:5000/api/docs
 ```
+
+### 开发与测试
+```bash
+# 代码检查
+ruff check .
+
+# 类型检查
+mypy src
+
+# 运行测试
+pytest -q
+```
+
+## 使用指南
+
+- 📖 **CLI详细用法**：[docs/CLI_USAGE.md](docs/CLI_USAGE.md) - 命令行工具完整使用指南
+- 🌐 **API接口文档**：[docs/API_USAGE.md](docs/API_USAGE.md) - REST API详细说明
+- 🛠️ **开发指南**：[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) - 项目开发和贡献指南
+- 🧪 **测试指南**：[docs/TESTING.md](docs/TESTING.md) - 测试框架和用例说明
 
 ## 文档
 
