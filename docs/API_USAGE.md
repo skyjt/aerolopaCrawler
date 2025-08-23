@@ -53,14 +53,15 @@ def get_seatmap(airline, aircraft):
     return response.json()
 
 def download_image(iata_code, filename, save_path=None):
-    """下载座位图图片"""
+    """下载座位图图片（本地 data 缓存 24 小时自动刷新）"""
     url = f"{BASE_URL}/api/v1/image/{iata_code}/{filename}"
     params = {
         'quality': 85,
         'width': 1200,
         'height': 800
     }
-    
+
+    # API 会先尝试读取 data 目录下的缓存图片，缺失或过期则自动从官网更新
     response = requests.get(url, params=params)
     
     if response.status_code == 200:

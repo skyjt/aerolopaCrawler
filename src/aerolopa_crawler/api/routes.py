@@ -4,20 +4,17 @@
 """
 
 import os
-import time
 import psutil
 from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional
 
 from flask import Blueprint, request, jsonify, send_file, current_app
-from flask_caching import Cache
 
 from ..config import Config
-from ..airlines import AirlineManager, get_airline_info, get_all_airlines
+from ..airlines import get_airline_info, get_all_airlines
 from ..aerolopa_crawler import AerolopaCrawler
 from .exceptions import APIError
 from .validators import (
-    validate_request_params, validate_image_params,
+    validate_image_params,
     validate_iata_code_with_message, validate_aircraft_model_with_message
 )
 from .utils import (
@@ -165,12 +162,10 @@ def get_seatmap():
         data = request.get_json() or {}
         airline = data.get('airline', '').strip().upper()
         aircraft = data.get('aircraft', '').strip()
-        format_type = data.get('format', 'json').lower()
         force_refresh = data.get('force_refresh', False)
     else:
         airline = request.args.get('airline', '').strip().upper()
         aircraft = request.args.get('aircraft', '').strip()
-        format_type = request.args.get('format', 'json').lower()
         force_refresh = request.args.get('force_refresh', 'false').lower() == 'true'
     
     # 验证参数
@@ -279,9 +274,33 @@ def serve_image(iata_code: str, filename: str):
     
     config = Config()
     
-    # 构建图片路径
+    # 构建图片路径（优先读取 data 目录缓存）
     image_path = os.path.join(config.image.cache_dir, iata_code.upper(), filename)
-    
+
+    # 判断文件是否需要更新：不存在或超过24小时
+    need_fetch = True
+    if os.path.exists(image_path):
+        modified_time = datetime.fromtimestamp(os.path.getmtime(image_path))
+        if datetime.now() - modified_time <= timedelta(hours=24):
+            need_fetch = False
+
+    if need_fetch:
+        try:
+            crawler = get_crawler()
+            url = f"{config.crawler.base_url}/{iata_code.lower()}/{filename}"
+            response = crawler.session.get(url, timeout=config.crawler.timeout, stream=True)
+            response.raise_for_status()
+            os.makedirs(os.path.dirname(image_path), exist_ok=True)
+            with open(image_path, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+        except Exception as e:
+            raise APIError(
+                f"图片获取失败: {str(e)}",
+                500,
+                "CRAWL_ERROR"
+            )
+
     if not os.path.exists(image_path):
         raise APIError(
             f"图片文件不存在: {filename}",

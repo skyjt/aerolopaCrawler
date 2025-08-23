@@ -60,11 +60,11 @@ aerolopaCrawler/
 ├── API_USAGE.md              # API 使用说明
 ├── DEVELOPMENT.md            # 开发文档
 ├── .gitignore               # Git 忽略文件
-├── data/                    # 数据目录
+├── data/                    # 数据目录（含图片缓存）
 │   ├── airlines/            # 航空公司数据
-│   └── seatmaps/           # 座位图文件
+│   ├── seatmaps/           # 座位图文件
+│   └── <IATA>/             # 各航空公司图片
 ├── cache/                   # 缓存目录
-│   ├── images/             # 图片缓存
 │   └── flask/              # Flask 缓存
 ├── logs/                    # 日志目录
 │   ├── app.log             # 应用日志
@@ -283,7 +283,7 @@ def get_seatmap():
 @log_request
 def serve_image(iata_code, filename):
     """图片服务接口"""
-    # 实现逻辑
+    # 实现逻辑：优先读取 data 目录缓存，超 24 小时自动从官网更新
     pass
 ```
 

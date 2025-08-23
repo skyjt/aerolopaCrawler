@@ -9,7 +9,7 @@ import logging
 from datetime import datetime
 from functools import wraps
 from collections import defaultdict, deque
-from typing import Dict, Any, Callable
+from typing import Callable
 
 from flask import request, jsonify, g
 
@@ -112,6 +112,7 @@ def log_request(f: Callable) -> Callable:
         # 存储到g对象中，供其他地方使用
         g.request_start_time = start_time
         g.client_ip = client_ip
+        g.user_agent = user_agent
         g.endpoint = endpoint
         
         try:
@@ -153,25 +154,18 @@ def log_request(f: Callable) -> Callable:
 
 def _update_performance_metrics(endpoint: str, response_time: float, success: bool, error_type: str = None):
     """更新性能指标
-    
+
     Args:
         endpoint: 端点名称
         response_time: 响应时间
         success: 是否成功
         error_type: 错误类型（如果失败）
     """
-    try:
-        from flask import current_app
-        
-        # 这里可以集成到实际的性能监控系统
-        # 目前只是记录日志
-        if success:
-            logger.debug(f"Performance: {endpoint} - {response_time:.3f}s - Success")
-        else:
-            logger.debug(f"Performance: {endpoint} - {response_time:.3f}s - Error: {error_type}")
-            
-    except Exception as e:
-        logger.warning(f"Failed to update performance metrics: {str(e)}")
+    # 这里可以集成到实际的性能监控系统，目前仅记录日志
+    if success:
+        logger.debug(f"Performance: {endpoint} - {response_time:.3f}s - Success")
+    else:
+        logger.debug(f"Performance: {endpoint} - {response_time:.3f}s - Error: {error_type}")
 
 
 def require_json(f: Callable) -> Callable:

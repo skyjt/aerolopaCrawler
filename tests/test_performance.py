@@ -12,11 +12,9 @@ Date: 2024
 
 import time
 import statistics
-import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 import unittest
-from unittest.mock import patch
 
 try:
     import requests
@@ -234,7 +232,6 @@ class TestAPIPerformance(unittest.TestCase):
         # 计算统计信息
         mean_time = statistics.mean(response_times)
         max_time = max(response_times)
-        min_time = min(response_times)
         
         # 检查响应时间范围（最大响应时间不应超过平均时间的10倍或0.1秒，取较大值）
         # 这样既考虑了相对性能，也设置了绝对上限
