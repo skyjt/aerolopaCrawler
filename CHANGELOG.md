@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## [2025-08-24 19:11] - 修复GitHub Actions测试依赖问题
+
+### 修复内容
+- **问题**: GitHub Actions 工作流中缺少开发依赖，导致 pytest 模块未找到
+- **错误信息**: `/opt/hostedtoolcache/Python/3.11.13/x64/bin/python: No module named pytest`
+- **解决方案**: 更新 GitHub Actions 工作流配置，添加开发依赖安装
+
+### 修改内容
+- 在 `.github/workflows/tests.yml` 中添加 `pip install -r requirements-dev.txt`
+- 移除重复的 `pip install flake8`，因为 flake8 已在 requirements-dev.txt 中
+- 确保所有测试工具（pytest, pytest-cov, flake8 等）正确安装
+
+### 影响范围
+- **文件**: `.github/workflows/tests.yml`
+- **CI/CD**: GitHub Actions 工作流现在能正确安装所有依赖
+- **测试**: 单元测试、集成测试和覆盖率测试现在应该能正常运行
+
+### 技术细节
+- **依赖管理**: 分离生产依赖 (requirements.txt) 和开发依赖 (requirements-dev.txt)
+- **工作流优化**: 避免重复安装相同的包
+- **Python 版本**: 支持 Python 3.8-3.13 的完整测试矩阵
+
+---
+
 ## [2025-08-24 19:07] - 修复 flake8 代码检查错误
 
 ### 修改内容
