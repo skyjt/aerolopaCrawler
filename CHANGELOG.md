@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## [2025-08-24 19:03] - 修复 GitHub Actions 工作流问题
+
+### 修改内容
+- **升级 actions/upload-artifact**：将所有使用的 `actions/upload-artifact@v3` 升级到 `@v4`
+- **解决弃用警告**：修复因使用已弃用版本导致的 GitHub Actions 工作流失败
+- **影响的步骤**：
+  - Upload test results（测试结果上传）
+  - Upload performance results（性能测试结果上传）
+  - Upload security reports（安全扫描报告上传）
+
+### 影响范围
+- GitHub Actions 工作流现在可以正常运行
+- 避免了 2025年1月30日后的自动失败
+- 提升了上传和下载速度（最高可达98%）
+
+### 技术细节
+- actions/upload-artifact v3 将在 2025年1月30日后停止支持
+- v4 版本提供更好的性能和新功能
+- 保持了与现有工作流的兼容性
+
 ## [2025-08-24 11:57] - 修复 Windows 兼容性问题
 
 ### 修改内容
