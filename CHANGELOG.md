@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [2025-08-24 19:19] - 依赖与缓存修复：添加flake8并修正缓存键
+
+### 内容
+- 在 `requirements-dev.txt` 中新增 `flake8>=7.0`，确保本地与CI环境一致可用
+- 修复 GitHub Actions pip 缓存键，使其包含 `requirements-dev.txt`，避免开发依赖更新被缓存掩盖
+
+### 影响范围
+- **文件**: `requirements-dev.txt`, `.github/workflows/tests.yml`
+- **CI/CD**: 确保 flake8 在所有Python版本(3.8-3.13)上可用，缓存命中逻辑更准确
+
+---
+
 ## [2025-08-24 19:13] - 增强GitHub Actions中flake8安装验证
 
 ### 修复内容
