@@ -1,5 +1,31 @@
 # CHANGELOG
 
+## [2025-08-24 19:13] - 增强GitHub Actions中flake8安装验证
+
+### 修复内容
+- **问题**: GitHub Actions 中仍然出现 `flake8: command not found` 错误
+- **原因**: 虽然添加了 requirements-dev.txt 安装，但可能存在安装顺序或缓存问题
+- **解决方案**: 添加 flake8 安装验证步骤，确保工具可用性
+
+### 修改内容
+- 新增 "Verify flake8 installation" 步骤
+- 使用 `python -m pip show flake8` 检查安装状态
+- 如果未安装则强制安装 `pip install flake8`
+- 验证 flake8 在 PATH 中的可用性
+- 显示 flake8 版本信息用于调试
+
+### 影响范围
+- **文件**: `.github/workflows/tests.yml`
+- **CI/CD**: 增强工作流的健壮性和调试能力
+- **测试**: 确保代码检查步骤能够稳定执行
+
+### 技术细节
+- **故障排除**: 添加多层验证机制
+- **兼容性**: 支持不同的 Python 环境和缓存状态
+- **调试信息**: 提供详细的安装状态输出
+
+---
+
 ## [2025-08-24 19:11] - 修复GitHub Actions测试依赖问题
 
 ### 修复内容

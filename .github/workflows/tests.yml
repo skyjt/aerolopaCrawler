@@ -45,6 +45,12 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
     
+    - name: Verify flake8 installation
+      run: |
+        python -m pip show flake8 || pip install flake8
+        which flake8 || echo "flake8 not found in PATH"
+        flake8 --version
+    
     - name: Lint with flake8
       run: |
         # 停止构建如果有Python语法错误或未定义的名称
