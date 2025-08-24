@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## [2025-08-24 19:07] - 修复 flake8 代码检查错误
+
+### 修改内容
+- 移除 routes.py 中不必要的 `global` 声明
+- 修复 F824 错误：`global request_counter` 和 `global start_time` 未使用问题
+- 涉及 3 个函数：`health_check()`, `get_metrics()`, `get_enhanced_stats()`
+
+### 影响范围
+- **代码质量**: 消除 flake8 F824 警告，提升代码规范性
+- **CI/CD 流水线**: GitHub Actions 测试现在可以通过 flake8 检查
+- **性能**: 移除不必要的全局变量声明，轻微提升函数执行效率
+
+### 技术细节
+- 这些函数只读取全局变量 `request_counter` 和 `start_time`，不需要修改
+- Python 中只有在函数内部需要修改全局变量时才需要 `global` 声明
+- 仅读取全局变量时，Python 会自动在全局作用域中查找变量
+
 ## [2025-08-24 19:05] - 扩展 Python 版本测试覆盖
 
 ### 修改内容

@@ -71,7 +71,6 @@ def index():
 @log_request
 def health_check():
     """健康检查端点"""
-    global request_counter, start_time
     
     config = Config()
     
@@ -340,7 +339,6 @@ def serve_image(iata_code: str, filename: str):
 @log_request
 def get_metrics():
     """获取实时性能指标"""
-    global request_counter, start_time
     
     uptime = datetime.now() - start_time
     memory = psutil.virtual_memory()
@@ -421,7 +419,6 @@ def clear_cache():
 @log_request
 def get_enhanced_stats():
     """获取增强版API统计信息"""
-    global request_counter, start_time
     
     config = Config()
     
