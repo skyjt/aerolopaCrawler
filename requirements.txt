@@ -8,7 +8,8 @@ flask-cors>=4.0.0
 flask-caching>=2.1.0
 
 # WSGI 服务器
-gunicorn>=21.2.0
+gunicorn>=21.2.0  # Linux/macOS
+waitress>=3.0.0   # Windows 兼容
 
 # HTTP 请求与网页解析
 requests>=2.31.0

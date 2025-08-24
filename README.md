@@ -102,11 +102,20 @@ python main.py --list-airlines
 # 开发环境启动（Flask 内置服务器）
 python app.py
 
-# 生产环境启动（Gunicorn）
-gunicorn app:app -c gunicorn.conf.py
+# 生产环境启动（跨平台自动选择）
+python start_server.py
 
-# 访问 API 文档
-# http://localhost:8000/api/docs
+# 手动指定 WSGI 服务器
+python start_server.py --server waitress  # Windows 推荐
+python start_server.py --server gunicorn  # Linux/macOS
+
+# 自定义端口和线程数
+python start_server.py --port 9000 --workers 8
+
+# 访问服务
+# http://localhost:8000/        - API 信息
+# http://localhost:8000/health  - 健康检查
+# http://localhost:8000/docs    - API 文档
 ```
 
 ### 开发与测试

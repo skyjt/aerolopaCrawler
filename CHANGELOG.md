@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## [2025-08-24 11:57] - 修复 Windows 兼容性问题
+
+### 修改内容
+- **解决 Gunicorn Windows 兼容性**：发现 Gunicorn 在 Windows 上因缺少 fcntl 模块无法运行
+- **引入 Waitress 服务器**：添加 `waitress>=3.0.0` 依赖作为 Windows 兼容的 WSGI 服务器
+- **创建跨平台启动脚本**：新增 `start_server.py`，自动检测操作系统并选择合适的 WSGI 服务器
+  - Linux/macOS：使用 Gunicorn
+  - Windows：使用 Waitress
+- **添加 Waitress 配置**：创建 `waitress.conf.py` 配置文件，优化 Windows 生产环境部署
+- **更新文档**：修改 `README.md`，说明跨平台启动方式和 Windows 特殊配置
+
+### 影响范围
+- Windows 用户现在可以正常启动生产环境服务
+- 跨平台兼容性得到保证
+- 简化了部署流程
+
+### 测试结果
+- ✅ Waitress 服务器启动成功
+- ✅ API 端点响应正常
+- ✅ 健康检查通过
+- ✅ 跨平台启动脚本工作正常
+
 ## [2025-08-24 00:00] - 添加 Gunicorn 生产部署支持
 
 ### 修改内容
