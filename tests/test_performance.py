@@ -15,6 +15,10 @@ import statistics
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 import unittest
+import pytest
+
+# 为本文件的所有测试应用标记
+pytestmark = [pytest.mark.performance, pytest.mark.slow]
 
 try:
     import requests

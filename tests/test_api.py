@@ -16,6 +16,10 @@ import tempfile
 import shutil
 from unittest.mock import patch
 from datetime import datetime
+import pytest
+
+# 为本文件的所有测试应用标记
+pytestmark = [pytest.mark.api, pytest.mark.integration]
 
 from src.aerolopa_crawler.api.app import create_app
 from src.aerolopa_crawler.api.validators import (

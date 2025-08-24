@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import pytest
 
 from aerolopa_crawler.crawler import Crawler
 from aerolopa_crawler.parsers.aerolopa import AerolopaParser
@@ -15,6 +16,10 @@ class DummyHttpClient:
 
     def get_text(self, url: str, headers=None) -> str:  # noqa: ARG002 - parity with real client
         return self._html
+
+
+# 为本文件的所有测试应用标记，便于使用 -m 选择
+pytestmark = [pytest.mark.unit, pytest.mark.crawler]
 
 
 def test_crawler_processes_and_writes(tmp_path: Path):

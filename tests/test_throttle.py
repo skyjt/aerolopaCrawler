@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 import time
+import pytest
+
+# 为本文件的所有测试应用标记
+pytestmark = [pytest.mark.unit]
 
 from aerolopa_crawler.throttle import Throttle
 

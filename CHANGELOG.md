@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## [2025-08-24 19:31] - 修复pytest标记选择器导致的0测试运行
+
+### 修复内容
+- 问题：CI 中使用 pytest 标记选择器导致 0 个测试被收集
+- 解决方案：为测试文件添加 pytest 标记，并在 pytest.ini 中注册所有标记，支持使用 `-m` 进行用例过滤
+
+### 修改内容
+- 新增与整理测试标记：
+  - unit：test_crawler_unit.py、test_normalizers.py、test_throttle.py、test_cli_smoke.py
+  - smoke：test_cli_smoke.py
+  - api、integration：test_api.py
+  - performance、slow：test_performance.py
+- 在 pytest.ini 中新增 markers 声明，并启用 `--strict-markers`，避免未知标记导致用例被全部 deselect
+
+### 影响范围
+- **文件**: `pytest.ini`，`tests/` 目录下的测试文件
+- **CI/CD**: 支持 `-m` 标记过滤，避免出现 “0 tests collected” 的问题
+- **测试**: 提高测试选择与分类的稳定性
+
+---
+
 ## [2025-08-24 19:19] - 依赖与缓存修复：添加flake8并修正缓存键
 
 ### 内容

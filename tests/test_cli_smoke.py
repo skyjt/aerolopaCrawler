@@ -3,6 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 from unittest.mock import Mock, patch
 import sys
+import pytest
+
+# 为本文件的所有测试应用标记
+pytestmark = [pytest.mark.unit, pytest.mark.smoke]
 
 import aerolopa_crawler.cli as cli
 
