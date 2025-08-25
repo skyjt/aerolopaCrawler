@@ -5,8 +5,8 @@ crawler architecture, providing seat map crawling capabilities.
 """
 from __future__ import annotations
 
-import csv
 import logging
+import sqlite3
 import os
 import re
 import time
@@ -27,7 +27,7 @@ class AerolopaCrawler:
     - Multi-airline support
     - Aircraft model detection
     - Image downloading and processing
-    - CSV data management
+    - SQLite data management
     - Progress tracking
     """
     
@@ -47,9 +47,9 @@ class AerolopaCrawler:
         # Create output directories
         self._ensure_directories()
         
-        # Initialize CSV file
-        self.csv_file = os.path.join(self.config.crawler.output_dir, "seatmaps.csv")
-        self._init_csv_file()
+        # Initialize SQLite database
+        self.db_file = os.path.join(self.config.crawler.output_dir, "seatmaps.db")
+        self._init_db()
         
         # Track processed URLs to avoid duplicates
         self.processed_urls: Set[str] = set()
@@ -99,33 +99,84 @@ class AerolopaCrawler:
         os.makedirs(self.config.crawler.output_dir, exist_ok=True)
         os.makedirs(self.config.image.cache_dir, exist_ok=True)
     
+    def _init_db(self) -> None:
+        """Initialize SQLite database and tables."""
+        os.makedirs(os.path.dirname(self.db_file), exist_ok=True)
+        conn = sqlite3.connect(self.db_file)
+        try:
+            cur = conn.cursor()
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS seatmaps (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    airline_iata TEXT,
+                    airline_name_cn TEXT,
+                    airline_name_en TEXT,
+                    aircraft_model TEXT,
+                    seat_map_url TEXT,
+                    image_url TEXT,
+                    image_path TEXT,
+                    crawl_time TEXT,
+                    page_title TEXT,
+                    description TEXT
+                )
+                """
+            )
+            # Create a unique index to prevent duplicate entries across runs
+            cur.execute(
+                """
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_seatmaps_unique
+                ON seatmaps (airline_iata, aircraft_model, image_url)
+                """
+            )
+            conn.commit()
+        finally:
+            conn.close()
+    
     def _init_csv_file(self) -> None:
-        """Initialize CSV file with headers if it doesn't exist."""
-        if not os.path.exists(self.csv_file):
-            with open(self.csv_file, 'w', newline='', encoding='utf-8') as f:
-                writer = csv.writer(f)
-                writer.writerow([
-                    'airline_iata', 'airline_name_cn', 'airline_name_en',
-                    'aircraft_model', 'seat_map_url', 'image_url', 'image_path',
-                    'crawl_time', 'page_title', 'description'
-                ])
+        """Deprecated: use SQLite instead."""
+        self._init_db()
+    
+    def _write_to_db(self, data: Dict[str, str]) -> None:
+        """Write data to SQLite database."""
+        conn = sqlite3.connect(self.db_file)
+        try:
+            cur = conn.cursor()
+            cur.execute(
+                """
+                INSERT OR IGNORE INTO seatmaps (
+                    airline_iata,
+                    airline_name_cn,
+                    airline_name_en,
+                    aircraft_model,
+                    seat_map_url,
+                    image_url,
+                    image_path,
+                    crawl_time,
+                    page_title,
+                    description
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    data.get('airline_iata', ''),
+                    data.get('airline_name_cn', ''),
+                    data.get('airline_name_en', ''),
+                    data.get('aircraft_model', ''),
+                    data.get('seat_map_url', ''),
+                    data.get('image_url', ''),
+                    data.get('image_path', ''),
+                    data.get('crawl_time', ''),
+                    data.get('page_title', ''),
+                    data.get('description', ''),
+                ),
+            )
+            conn.commit()
+        finally:
+            conn.close()
     
     def _write_to_csv(self, data: Dict[str, str]) -> None:
-        """Write data to CSV file."""
-        with open(self.csv_file, 'a', newline='', encoding='utf-8') as f:
-            writer = csv.writer(f)
-            writer.writerow([
-                data.get('airline_iata', ''),
-                data.get('airline_name_cn', ''),
-                data.get('airline_name_en', ''),
-                data.get('aircraft_model', ''),
-                data.get('seat_map_url', ''),
-                data.get('image_url', ''),
-                data.get('image_path', ''),
-                data.get('crawl_time', ''),
-                data.get('page_title', ''),
-                data.get('description', '')
-            ])
+        """Deprecated: use SQLite instead."""
+        self._write_to_db(data)
     
     def _fetch_page(self, url: str) -> Optional[BeautifulSoup]:
         """Fetch and parse a web page.
@@ -401,7 +452,7 @@ class AerolopaCrawler:
                 filename = self._generate_image_filename(iata_code, aircraft_model, image_url)
                 image_path = self._download_image(image_url, iata_code, filename)
                 
-                # Prepare data for CSV
+                # Prepare data for DB
                 data = {
                     'airline_iata': iata_code,
                     'airline_name_cn': chinese_name,
@@ -415,8 +466,8 @@ class AerolopaCrawler:
                     'description': ''
                 }
                 
-                # Write to CSV
-                self._write_to_csv(data)
+                # Write to SQLite
+                self._write_to_db(data)
                 processed_count += 1
                 
                 self.logger.info(f"Processed seat map: {aircraft_model} - {image_url}")
@@ -467,12 +518,21 @@ class AerolopaCrawler:
         stats = {
             'total_airlines': len(self.airline_manager.get_supported_iata_codes()),
             'processed_urls': len(self.processed_urls),
-            'csv_records': 0
+            'db_records': 0
         }
         
-        # Count CSV records
-        if os.path.exists(self.csv_file):
-            with open(self.csv_file, 'r', encoding='utf-8') as f:
-                stats['csv_records'] = sum(1 for line in f) - 1  # Subtract header
+        # Count DB records
+        if os.path.exists(getattr(self, 'db_file', '')):
+            try:
+                conn = sqlite3.connect(self.db_file)
+                try:
+                    cur = conn.cursor()
+                    cur.execute("SELECT COUNT(*) FROM seatmaps")
+                    row = cur.fetchone()
+                    stats['db_records'] = int(row[0]) if row else 0
+                finally:
+                    conn.close()
+            except Exception:
+                stats['db_records'] = 0
         
         return stats

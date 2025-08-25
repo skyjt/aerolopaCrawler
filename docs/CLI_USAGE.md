@@ -53,7 +53,7 @@ python main.py --airline UA --output-dir ./my_data
 
 **输出说明：**
 - 座位图图片保存到 `data/seatmaps/AA/` 目录
-- 生成 `data/seatmaps_AA.csv` 数据文件
+- 结构化数据写入 `data/seatmaps.db`（SQLite）与 `data/results.jsonl`（JSON Lines）
 - 显示抓取进度和统计信息
 
 ### 2. 抓取所有航空公司
@@ -68,7 +68,7 @@ python main.py --all-airlines --stats --verbose
 
 **输出说明：**
 - 依次抓取所有支持的航空公司座位图
-- 每个航空公司生成独立的目录和CSV文件
+- 每个航空公司生成独立的图片目录；结构化数据统一写入 `seatmaps.db` 与 `results.jsonl`
 - 显示总体抓取统计信息
 
 ### 3. 查看支持的航空公司
@@ -102,24 +102,29 @@ data/
 │   │   └── ...
 │   ├── DL/                  # Delta Airlines 图片
 │   └── ...
-├── seatmaps_AA.csv          # American Airlines 数据文件
-├── seatmaps_DL.csv          # Delta Airlines 数据文件
+├── seatmaps.db              # 结构化数据（SQLite 数据库）
+├── results.jsonl            # 结构化数据（JSON Lines，每行一个 JSON 对象）
 └── crawler_log.txt          # 抓取日志文件
 ```
 
-### CSV 数据格式
+### 数据存储格式
 
-生成的 CSV 文件包含以下字段：
+当前版本支持两种结构化数据存储格式，二者可同时生成：
 
-| 字段名 | 描述 | 示例 |
-|--------|------|------|
-| `airline_code` | 航空公司代码 | AA |
-| `airline_name` | 航空公司名称 | American Airlines |
-| `aircraft_model` | 飞机型号 | Boeing 737-800 |
-| `seatmap_url` | 座位图原始URL | https://... |
-| `image_filename` | 本地图片文件名 | boeing-737-800_001.jpg |
-| `download_time` | 下载时间 | 2024-01-20 10:30:45 |
-| `file_size` | 文件大小（字节） | 245760 |
+1) SQLite 数据库（`seatmaps.db`）
+- 用于高效查询与统计（如 CLI `--stats` 的记录数统计）
+- 主要表：`seatmaps`（包含座位图的结构化信息）
+- 典型字段：`airline_code`、`airline_name`、`aircraft_model`、`seatmap_url`、`image_filename`、`downloaded_at`、`file_size_bytes`
+
+2) JSON Lines（`results.jsonl`）
+- 每行一个 JSON 对象，便于流式处理与追踪抓取过程
+- 典型记录示例：
+
+```json
+{"airline_code":"AA","aircraft_model":"Boeing 737-800","seatmap_url":"https://...","image_filename":"boeing-737-800_001.jpg","downloaded_at":"2024-01-20T10:30:45Z","file_size_bytes":245760}
+```
+
+提示：历史 CSV 导出已取消，不再生成新的 CSV 文件；已有历史 CSV 文件无需迁移，仍可按需保留。
 
 ## 高级功能
 

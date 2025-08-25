@@ -1,5 +1,34 @@
 # CHANGELOG
 
+## [2025-08-25 10:00] - 存储后端切换至 SQLite/JSONL，取消 CSV 导出；修复测试导入路径；更新文档
+
+### 变更概览
+- 将结构化数据输出由 CSV 切换为 SQLite 数据库（`seatmaps.db`）与 JSON Lines（`results.jsonl`），不再生成新的 CSV 文件。
+- 文档全面更新，反映新的存储后端与输出结构。
+- 修复测试环境导入路径问题，兼容 `from src...` 与直接 `from aerolopa_crawler...` 的两种导入方式。
+
+### 修改内容
+- 文档更新：
+  - `docs/CLI_USAGE.md`：
+    - 将输出说明由 “生成 seatmaps_*.csv” 改为 “写入 seatmaps.db 与 results.jsonl”。
+    - 更新目录结构示例与数据格式说明，新增 SQLite 与 JSONL 的字段示例。
+    - 明确说明历史 CSV 不迁移且不再生成。
+  - `README.md`：
+    - 将“数据导出”改为“数据存储（SQLite/JSONL）”。
+    - 在“说明”中明确：不迁移历史 CSV；如需保留可自行归档或基于新存储导出。
+- 测试修复：
+  - `tests/conftest.py`：在测试前置中同时将“项目根目录”和 `src/` 目录加入 `sys.path`，解决 `ModuleNotFoundError: No module named 'src'`。
+
+### 影响范围
+- 运行时行为：不再生成新的 CSV 文件；统计信息与查询基于 SQLite（`seatmaps.db`）。
+- 文档：CLI 使用说明与 README 与实现一致。
+- 测试：pytest 在本地虚拟环境内已通过，导入路径问题解决。
+
+### 向后兼容性
+- 历史 CSV 文件不做迁移；项目对历史 CSV 无依赖，不影响现有运行。
+
+---
+
 ## [2025-08-24 19:31] - 修复pytest标记选择器导致的0测试运行
 
 ### 修复内容
